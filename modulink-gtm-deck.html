@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Modulink — Competitor Research & GTM Plan</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3e;
+    --accent: #4f8ef7;
+    --accent2: #38d9a9;
+    --text: #e8eaf0;
+    --muted: #7c8099;
+    --red: #f06a6a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── SLIDE CONTAINER ── */
+  #deck {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 52px 72px 40px;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events: none;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -.5px;
+  }
+  h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -.3px;
+    margin-bottom: 28px;
+  }
+  .sub {
+    font-size: 16px;
+    color: var(--muted);
+    margin-top: 12px;
+    line-height: 1.6;
+    max-width: 580px;
+  }
+
+  /* ── TITLE SLIDE ── */
+  .slide-title {
+    justify-content: center;
+    gap: 0;
+    background: radial-gradient(ellipse at 30% 60%, #1b2a4a 0%, var(--bg) 65%);
+  }
+  .slide-title h1 { font-size: 52px; max-width: 700px; }
+  .logo-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 28px;
+    width: fit-content;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
+  .title-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 40px;
+  }
+  .meta-item { font-size: 13px; color: var(--muted); }
+  .meta-item strong { display: block; color: var(--text); font-size: 15px; margin-bottom: 2px; }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  thead tr { border-bottom: 1px solid var(--border); }
+  th {
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 12px 10px 0;
+  }
+  td {
+    padding: 9px 12px 9px 0;
+    color: var(--text);
+    border-bottom: 1px solid #1f2233;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge-blue  { background: #1e3a6e; color: #7fb3ff; }
+  .badge-teal  { background: #0e3a32; color: var(--accent2); }
+  .badge-grey  { background: #22253a; color: var(--muted); }
+  .badge-red   { background: #3a1a1a; color: #f09090; }
+  .price       { font-weight: 600; color: var(--accent2); }
+  .na          { color: var(--muted); font-style: italic; }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    gap: 14px;
+  }
+  .card-grid-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .card-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .card p  { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .card ul { list-style: none; padding: 0; margin: 0; }
+  .card ul li {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .card ul li::before { content: "›"; color: var(--accent); flex-shrink: 0; }
+
+  /* ── HIGHLIGHT ROW ── */
+  .highlight-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .highlight-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 22px;
+    flex: 1;
+  }
+  .highlight-box .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .highlight-box .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── NUMBERED LIST ── */
+  .ranked-list { list-style: none; padding: 0; }
+  .ranked-list li {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .ranked-list li:last-child { border-bottom: none; }
+  .rank-num {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--border);
+    width: 28px;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+  .rank-body h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .rank-body p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .roi-pill {
+    margin-left: auto;
+    align-self: center;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .roi-high   { background: #0e3a32; color: var(--accent2); }
+  .roi-med    { background: #1e3a6e; color: #7fb3ff; }
+  .roi-low    { background: #2a2d3e; color: var(--muted); }
+
+  /* ── TIMELINE ── */
+  .timeline { display: flex; gap: 0; margin-top: 8px; }
+  .phase-block {
+    flex: 1;
+    padding: 20px 20px;
+    border-top: 3px solid var(--border);
+    position: relative;
+  }
+  .phase-block.p0 { border-top-color: var(--muted); }
+  .phase-block.p1 { border-top-color: var(--accent); }
+  .phase-block.p2 { border-top-color: var(--accent2); }
+  .phase-block.p3 { border-top-color: #f4a261; }
+  .phase-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .phase-block.p0 .phase-tag { color: var(--muted); }
+  .phase-block.p1 .phase-tag { color: var(--accent); }
+  .phase-block.p2 .phase-tag { color: var(--accent2); }
+  .phase-block.p3 .phase-tag { color: #f4a261; }
+  .phase-block h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .phase-block p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .phase-goal {
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 5px 8px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: #111e35;
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  /* ── PRICING TABLE ── */
+  .price-tier-row {
+    display: flex;
+    gap: 12px;
+  }
+  .price-tier {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .price-tier.featured {
+    border-color: var(--accent);
+    background: #111e35;
+  }
+  .tier-name { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .tier-price { font-size: 26px; font-weight: 700; color: var(--text); }
+  .tier-price span { font-size: 14px; color: var(--muted); font-weight: 400; }
+  .tier-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .tier-tag { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; background: #1e3a6e; color: #7fb3ff; width: fit-content; }
+
+  /* ── NAVIGATION ── */
+  #nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 72px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+  #progress-dots { display: flex; gap: 6px; }
+  .pdot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .pdot.active { background: var(--accent); width: 20px; border-radius: 3px; }
+
+  .nav-btns { display: flex; gap: 10px; }
+  .nav-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .15s, border-color .15s;
+  }
+  .nav-btn:hover { background: #22253a; border-color: var(--accent); }
+  .nav-btn:disabled { opacity: .3; cursor: default; }
+
+  #slide-counter { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 1 — TITLE -->
+  <div class="slide slide-title active" id="s1">
+    <div class="logo-pill"><span class="dot"></span>Confidential — Internal Research</div>
+    <h1>Competitor Research<br>&amp; GTM Plan</h1>
+    <p class="sub">Industrial remote monitoring &amp; control · Private LoRa · Self-hosted SaaS<br>Target market: water treatment and similar industrial operations</p>
+    <div class="title-meta">
+      <div class="meta-item"><strong>12 Competitors</strong>Mapped across 3 buckets</div>
+      <div class="meta-item"><strong>5 Phases</strong>Research → GTM strategy</div>
+      <div class="meta-item"><strong>June 2026</strong>Research date</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 2 — LANDSCAPE -->
+  <div class="slide" id="s2">
+    <div class="eyebrow">Phase 1 · Competitive Landscape</div>
+    <h2>12 Competitors Across 3 Buckets</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Bucket</th>
+          <th>Core Overlap with Modulink</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Inductive Automation (Ignition)</strong></td><td><span class="badge badge-blue">Legacy SCADA</span></td><td>SCADA/HMI, Modbus, 4-20mA, water utilities</td></tr>
+        <tr><td><strong>AVEVA</strong> (InTouch / Geo SCADA Expert)</td><td><span class="badge badge-blue">Legacy SCADA</span></td><td>Distributed remote telemetry, water treatment</td></tr>
+        <tr><td><strong>Schneider EcoStruxure Geo SCADA</strong></td><td><span class="badge badge-blue">Legacy SCADA</span></td><td>Remote monitoring, water / gas distribution</td></tr>
+        <tr><td><strong>Rockwell FactoryTalk</strong></td><td><span class="badge badge-blue">Legacy SCADA</span></td><td>SCADA/historian, industrial process control</td></tr>
+        <tr><td><strong>Xylem / Sensus</strong></td><td><span class="badge badge-teal">Cellular / IoT</span></td><td>Remote monitoring, water analytics SaaS (NaaS)</td></tr>
+        <tr><td><strong>KETOS</strong></td><td><span class="badge badge-teal">Cellular / IoT</span></td><td>Water quality monitoring, $0-CAPEX subscription</td></tr>
+        <tr><td><strong>Ubidots</strong></td><td><span class="badge badge-teal">Cellular / IoT</span></td><td>Cloud IoT dashboards, alerting, pump stations</td></tr>
+        <tr><td><strong>Valarm</strong></td><td><span class="badge badge-teal">Cellular / IoT</span></td><td>Remote sensor monitoring, tanks, water levels</td></tr>
+        <tr><td><strong>HMS Networks (Netbiter)</strong></td><td><span class="badge badge-teal">Cellular / IoT</span></td><td>Industrial gateways + cloud dashboard</td></tr>
+        <tr><td><strong>ThingsBoard</strong></td><td><span class="badge badge-grey">DIY / Open-Source</span></td><td>Self-hosted IoT platform, SCADA dashboards</td></tr>
+        <tr><td><strong>Actility ThingPark</strong></td><td><span class="badge badge-grey">DIY / Open-Source</span></td><td>Private LoRaWAN network server, utilities</td></tr>
+        <tr><td><strong>LORIOT</strong></td><td><span class="badge badge-grey">DIY / Open-Source</span></td><td>LoRaWAN network server, hosted + on-premise</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 3 — POSITIONING -->
+  <div class="slide" id="s3">
+    <div class="eyebrow">Phase 2 · Offering &amp; Positioning</div>
+    <h2>How Key Competitors Position Themselves</h2>
+    <div class="card-grid card-grid-2" style="flex:1;">
+      <div class="card">
+        <div class="card-label">Legacy SCADA</div>
+        <h3>Ignition (Inductive Automation)</h3>
+        <p>"Unlimited licensing, one server" — no per-device fees, cross-platform web HMI. Widely trusted by mid-market water districts.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Legacy SCADA</div>
+        <h3>AVEVA / EcoStruxure Geo SCADA</h3>
+        <p>"Built for distributed infrastructure" — water loss analytics, digital twins, IT/OT convergence. Targets large municipal utilities.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Cellular / IoT</div>
+        <h3>Xylem / Sensus</h3>
+        <p>"Network as a service" — Sensus owns the RF infrastructure, utility leases it. Shifts capex to opex. Lock-in by design.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Cellular / IoT</div>
+        <h3>KETOS</h3>
+        <p>"Lab-accurate water quality for $0 CAPEX" — hardware bundled in flat monthly fee. Targets industrial process water and food &amp; bev.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Cellular / IoT</div>
+        <h3>Ubidots</h3>
+        <p>"Powerful but simple industrial IoT" — hardware-agnostic, rapid self-serve deployment. Strong with OEMs building IoT products.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">DIY / Open-Source</div>
+        <h3>ThingsBoard</h3>
+        <p>"Open-source IoT with enterprise scale" — free community edition, no vendor lock-in. Requires developer expertise to deploy.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 4 — PRICING -->
+  <div class="slide" id="s4">
+    <div class="eyebrow">Phase 3 · Pricing Benchmarks</div>
+    <h2>What Competitors Charge</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Model</th>
+          <th>Published Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ignition</strong></td>
+          <td>Perpetual license + annual support</td>
+          <td><span class="price">$3,200–$13,500/yr</span> (suites); $15k–$45k typical deployment</td>
+        </tr>
+        <tr>
+          <td><strong>AVEVA / EcoStruxure Geo SCADA</strong></td>
+          <td>Perpetual / quote-based</td>
+          <td><span class="price">$15,000–$40,000+</span> (node-count dependent)</td>
+        </tr>
+        <tr>
+          <td><strong>Schneider EcoStruxure &amp; Rockwell FactoryTalk</strong></td>
+          <td>Quote-based</td>
+          <td class="na">NOT FOUND</td>
+        </tr>
+        <tr>
+          <td><strong>Xylem / Sensus</strong></td>
+          <td>NaaS (opex lease) + SaaS analytics</td>
+          <td class="na">NOT FOUND (quote-only)</td>
+        </tr>
+        <tr>
+          <td><strong>KETOS</strong></td>
+          <td>All-inclusive flat monthly (hardware included)</td>
+          <td class="na">NOT FOUND (demo required)</td>
+        </tr>
+        <tr>
+          <td><strong>Ubidots</strong></td>
+          <td>SaaS monthly subscription</td>
+          <td><span class="price">$99/mo</span> Professional; Industrial / Enterprise = custom</td>
+        </tr>
+        <tr>
+          <td><strong>Valarm / HMS Networks</strong></td>
+          <td>Hardware + cloud subscription</td>
+          <td class="na">NOT FOUND</td>
+        </tr>
+        <tr>
+          <td><strong>ThingsBoard</strong></td>
+          <td>Freemium SaaS / self-hosted PE / managed cloud</td>
+          <td><span class="price">Free</span> (CE self-host) · <span class="price">$49–$749/mo</span> cloud (5–1,000 devices) · <span class="price">$1,499/mo</span> managed private</td>
+        </tr>
+        <tr>
+          <td><strong>Actility ThingPark / LORIOT</strong></td>
+          <td>Freemium + enterprise SaaS</td>
+          <td><span class="price">Free</span> dev tier; enterprise <span class="na">NOT FOUND</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:18px; font-size:13px;">
+      <strong>Key insight:</strong> The $0–$1,500/month band is mostly empty for <em>purpose-built, self-hosted, offline-capable</em> industrial monitoring. Ignition's floor is $3,200/yr before deployment costs. ThingsBoard's managed tier jumps to $1,499/mo. Modulink can own the mid-market gap.
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 5 — ACQ + RETENTION -->
+  <div class="slide" id="s5">
+    <div class="eyebrow">Phase 4 · Acquisition &amp; Retention</div>
+    <h2>How Competitors Win and Keep Customers</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%">Company</th>
+          <th style="width:40%">Acquisition</th>
+          <th>Retention</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ignition</strong></td>
+          <td>Authorized SI channel, ICC conference, free trial, AWWA trade shows, SEO</td>
+          <td>Annual support contracts, large integrator community, perpetual license switching costs</td>
+        </tr>
+        <tr>
+          <td><strong>AVEVA</strong></td>
+          <td>Direct enterprise sales, reseller / SI channel, Hannover Messe, OTC, OEM bundling</td>
+          <td>Multi-year enterprise agreements, PI historian data lock-in, premium SLA support</td>
+        </tr>
+        <tr>
+          <td><strong>Xylem / Sensus</strong></td>
+          <td>Direct municipal sales, government RFP, utility conferences (AWWA ACE, WaterWorld)</td>
+          <td>Multi-year NaaS contracts; Sensus owns the RF network — contractual + technical lock-in</td>
+        </tr>
+        <tr>
+          <td><strong>KETOS</strong></td>
+          <td>Direct demo-based outreach, food safety / water quality trade shows</td>
+          <td>$0-CAPEX model (hardware stays KETOS's); all maintenance bundled; ongoing billing</td>
+        </tr>
+        <tr>
+          <td><strong>Ubidots</strong></td>
+          <td>Self-serve freemium; content/SEO; AWS / Azure marketplace listings</td>
+          <td>Data stickiness; tiered limits push upgrades; API integrations; white-label for OEMs</td>
+        </tr>
+        <tr>
+          <td><strong>HMS Networks</strong></td>
+          <td>OEM channel (pump / motor manufacturers embed Netbiter); distributor network</td>
+          <td>Cloud subscription; hardware design-in; OEM relationship creates downstream pull</td>
+        </tr>
+        <tr>
+          <td><strong>ThingsBoard</strong></td>
+          <td>Open-source GitHub community (20k+ stars); free tier onboarding; enterprise conversion</td>
+          <td>Platform customization lock-in; white-label / multi-tenant for SIs; enterprise SLAs</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 6 — BEACHHEAD -->
+  <div class="slide" id="s6">
+    <div class="eyebrow">Phase 5 · GTM — Beachhead &amp; Positioning</div>
+    <h2>Own the Gap: Small–Mid Water Utilities</h2>
+    <div class="highlight-row">
+      <div class="highlight-box">
+        <div class="num">148,000</div>
+        <div class="label">US public water systems (EPA)</div>
+      </div>
+      <div class="highlight-box">
+        <div class="num">~10,000+</div>
+        <div class="label">Mid-sized operators — underserved by SCADA giants</div>
+      </div>
+      <div class="highlight-box">
+        <div class="num">9,000+</div>
+        <div class="label">TX public water systems — Falcon pilot geography</div>
+      </div>
+    </div>
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="card-label">Why This Market</div>
+        <ul>
+          <li>Too small for Xylem/Sensus enterprise NaaS contracts</li>
+          <li>Can't afford $15k–$45k Ignition deployments</li>
+          <li>Lack IT staff to self-deploy ThingsBoard CE</li>
+          <li>Rural sites: no reliable internet = cellular solutions fail</li>
+          <li>Existing sensors (4-20mA, Modbus) — no budget for rip-and-replace</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Modulink Unfair Advantages</div>
+        <ul>
+          <li>Private LoRa — no cellular subscription cost across remote pump stations</li>
+          <li>Self-hosted — data stays on-site, satisfies municipal data-sovereignty needs</li>
+          <li>Works offline — designed for rural infrastructure reality</li>
+          <li>Plug into existing sensors — zero rip-and-replace</li>
+          <li>Modular Skills — start simple, expand over time</li>
+          <li>Live pilot: Falcon Water Tech (Texas)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 7 — PRICING STRATEGY -->
+  <div class="slide" id="s7">
+    <div class="eyebrow">Phase 5 · GTM — Pricing Strategy</div>
+    <h2>Hardware + SaaS Pricing</h2>
+    <div style="display:flex; gap:24px; margin-bottom:24px;">
+      <div style="flex:1;">
+        <div class="eyebrow" style="margin-bottom:12px;">Hardware (E-Commerce)</div>
+        <div class="card-grid" style="gap:10px;">
+          <div class="card" style="padding:14px 16px;">
+            <div class="tier-name">Starter Node</div>
+            <div class="tier-price">$299–$499</div>
+            <div class="tier-desc">Single 4-20mA / Modbus sensor endpoint</div>
+          </div>
+          <div class="card" style="padding:14px 16px;">
+            <div class="tier-name">Gateway / Hub</div>
+            <div class="tier-price">$799–$1,299</div>
+            <div class="tier-desc">Manages up to 32 nodes · 5+ km LoRa range</div>
+          </div>
+          <div class="card" style="padding:14px 16px; border-color: var(--accent2);">
+            <div class="tier-name">Starter Kit</div>
+            <div class="tier-price" style="color:var(--accent2);">$1,499</div>
+            <div class="tier-desc">1 gateway + 2 nodes + 1-yr SaaS Pro included. Dramatically below Ignition's $3,200+ entry.</div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div class="eyebrow" style="margin-bottom:12px;">SaaS Subscription (Per Site)</div>
+        <div class="price-tier-row" style="gap:8px;">
+          <div class="price-tier">
+            <div class="tier-name">Core</div>
+            <div class="tier-price">$49<span>/mo</span></div>
+            <div class="tier-desc">Up to 10 nodes · dashboards · basic alerts · 90-day retention</div>
+          </div>
+          <div class="price-tier featured">
+            <div class="tier-tag">Most popular</div>
+            <div class="tier-name">Pro</div>
+            <div class="tier-price">$149<span>/mo</span></div>
+            <div class="tier-desc">50 nodes · valve control · field maps · Skills modules · 2-yr retention</div>
+          </div>
+          <div class="price-tier">
+            <div class="tier-name">Plant</div>
+            <div class="tier-price">$349<span>/mo</span></div>
+            <div class="tier-desc">Unlimited nodes · multi-site · API · white-label · priority support</div>
+          </div>
+          <div class="price-tier">
+            <div class="tier-name">Enterprise</div>
+            <div class="tier-price" style="font-size:18px;">Custom</div>
+            <div class="tier-desc">Multi-site portfolios · SLA · onboarding · custom integrations</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:12px; color:var(--muted);">20% discount for annual prepay · Hardware lease option at $150–$250/mo for budget-constrained operators</div>
+      </div>
+    </div>
+    <div class="callout" style="font-size:12.5px; margin-bottom:0;">
+      <strong>Anchor points:</strong> ThingsBoard managed cloud = $1,499/mo · Ubidots Professional = $99/mo · Ignition suite minimum = $3,200/yr. Modulink's Plant tier ($349/mo for unlimited nodes at one site) beats ThingsBoard on unit economics. Pro tier ($149/mo) beats Ubidots while being purpose-built for water treatment operators, not developers.
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 8 — ACQUISITION CHANNELS -->
+  <div class="slide" id="s8">
+    <div class="eyebrow">Phase 5 · GTM — Acquisition Channels</div>
+    <h2>Ranked by Expected ROI</h2>
+    <ul class="ranked-list">
+      <li>
+        <div class="rank-num">1</div>
+        <div class="rank-body">
+          <h4>SEO &amp; Content Marketing</h4>
+          <p>Own high-intent queries: "water treatment remote monitoring LoRa," "SCADA alternative small utility," "self-hosted industrial IoT." Application-specific pages (CIP, RO, lift stations) anchored to Falcon Water Tech case study. Industrial buyers are 70%+ through the decision before speaking to a rep.</p>
+        </div>
+        <div class="roi-pill roi-high">High ROI · $0–3K/mo</div>
+      </li>
+      <li>
+        <div class="rank-num">2</div>
+        <div class="rank-body">
+          <h4>AWWA Trade Shows</h4>
+          <p>AWWA ACE (June · Washington D.C.) and AWWA WIC (August · Indianapolis) are the highest-concentration events for the exact buyer. Live hardware demo with real sensor data. Pre-schedule private meetings — ROI concentrates there, not in booth foot traffic.</p>
+        </div>
+        <div class="roi-pill roi-high">High ROI · $5–25K/event</div>
+      </li>
+      <li>
+        <div class="rank-num">3</div>
+        <div class="rank-body">
+          <h4>System Integrator (SI) Channel</h4>
+          <p>Recruit 5–10 water/wastewater SIs in Texas, Southeast, and Midwest. Offer 15–25% hardware margin + reseller SaaS pricing + demo kit. A single SI can bring 10–50 site deployments — Ignition built its mid-market dominance this way.</p>
+        </div>
+        <div class="roi-pill roi-med">Med ROI · 6–12 mo build</div>
+      </li>
+      <li>
+        <div class="rank-num">4</div>
+        <div class="rank-body">
+          <h4>LinkedIn Outbound &amp; Targeted Ads</h4>
+          <p>Target by job title (Water Treatment Plant Operator, SCADA Engineer, Utilities Director) + industry. Short-form video showing a live Modulink dashboard converts well. Google Search on mid-funnel keywords. Budget: $2–5K/month.</p>
+        </div>
+        <div class="roi-pill roi-med">Med ROI · Immediate</div>
+      </li>
+      <li>
+        <div class="rank-num">5</div>
+        <div class="rank-body">
+          <h4>Industry Trade Press</h4>
+          <p>WaterWorld, WWDMAG, Water Technology Online. Publish Falcon Water Tech case study as editorial or sponsored content. Reaches 50,000+ utility operators. Builds brand authority over 12–24 months.</p>
+        </div>
+        <div class="roi-pill roi-low">Lower ROI · Brand play</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 9 — E-COMMERCE STORE -->
+  <div class="slide" id="s9">
+    <div class="eyebrow">Phase 5 · GTM — E-Commerce Store</div>
+    <h2>Selling Hardware Directly Off the Website</h2>
+    <div class="card-grid card-grid-3" style="margin-bottom:18px;">
+      <div class="card">
+        <div class="card-label">Platform</div>
+        <h3>Shopify</h3>
+        <p>$79–$299/mo. Handles inventory, shipping, payments, and integrates with 3PL fulfillment partners. Add Stripe for SaaS subscription checkout in the same flow.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Store Structure</div>
+        <h3>3 Must-Haves</h3>
+        <ul>
+          <li>Use-case landing pages ("For Pump Stations," "For RO Systems") — serve SEO and buyer self-qualification</li>
+          <li>Product pages with wiring diagrams, sensor compatibility tables, IP ratings — operators won't buy without specs</li>
+          <li>SaaS subscription bundled at checkout as an add-on (auto-activate onboarding email)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Conversion Levers</div>
+        <h3>Reduce Friction</h3>
+        <ul>
+          <li>Free 30-day hardware demo kit (loaner) → convert on SaaS subscription</li>
+          <li>Free shipping above $500 to cut cart abandonment</li>
+          <li>30-day no-questions return policy (standard expectation for industrial electronics buyers)</li>
+          <li>Quickstart card in every box pointing to hosted docs</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="card-label">Fulfillment</div>
+        <h3>What's Needed</h3>
+        <ul>
+          <li>Hardware assembly / kitting location (in-house or contract manufacturer)</li>
+          <li>3PL (ShipBob or similar) once volume exceeds ~20–30 units/month</li>
+          <li>Standard UPS/FedEx ground — hardware is non-hazmat electronics</li>
+          <li>Verify EAR99 export classification on LoRa radio hardware before international orders</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">SaaS ↔ Hardware Flywheel</div>
+        <h3>The Loop</h3>
+        <p style="margin-bottom:10px;">Hardware purchase → auto-trigger SaaS trial activation → operator sees value in 30 days → converts to Pro or Plant subscription → expansion as they add more nodes → renewal.</p>
+        <p>Hardware is the acquisition vehicle. SaaS is the business.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ SLIDE 10 — ROADMAP -->
+  <div class="slide" id="s10">
+    <div class="eyebrow">Phase 5 · GTM — Phased Rollout</div>
+    <h2>12-Month Roadmap</h2>
+    <div class="timeline">
+      <div class="phase-block p0">
+        <div class="phase-tag">Phase 0 · Months 1–2</div>
+        <h4>Foundation</h4>
+        <p>Finalize Falcon Water Tech case study with quantified results. Launch e-commerce store (2–3 SKUs). Publish SaaS pricing. Stand up content hub with 5–10 application pages. Build live hardware demo rig.</p>
+        <div class="phase-goal">Goal: Store live, case study published</div>
+      </div>
+      <div class="phase-block p1">
+        <div class="phase-tag">Phase 1 · Months 3–6</div>
+        <h4>Beachhead Validation</h4>
+        <p>Exhibit at AWWA ACE or Water Expo. Target 20 paying pilot customers in water treatment (Texas focus). Recruit 2–3 SI partners. Refine Skills module roadmap from customer feedback.</p>
+        <div class="phase-goal">Goal: $10k–$30k MRR</div>
+      </div>
+      <div class="phase-block p2">
+        <div class="phase-tag">Phase 2 · Months 7–12</div>
+        <h4>Channel Acceleration</h4>
+        <p>Launch SI Partner Portal (deal registration, co-marketing, partner margins). Expand SKU lineup based on Phase 1 learnings. 2 application case studies/month. Run LinkedIn ads at utility operations directors.</p>
+        <div class="phase-goal">Goal: 5–10 SI partners · $50k–$80k MRR</div>
+      </div>
+      <div class="phase-block p3">
+        <div class="phase-tag">Phase 3 · Months 13–24</div>
+        <h4>Vertical Expansion</h4>
+        <p>Expand to food &amp; beverage (CIP direct adjacency), oil &amp; gas wellheads, agriculture. Same hardware architecture, new Skills modules and application pages. Evaluate industry-specific distributor partnerships.</p>
+        <div class="phase-goal">Goal: $150k–$250k MRR · 2–3 verticals</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:20px; font-size:13px;">
+      <strong>North star:</strong> Every competitor in this space either requires internet connectivity, charges enterprise-level fees, or demands developer expertise. Modulink wins by being the first purpose-built, self-hosted, offline-capable remote monitoring platform that a plant operator can buy online, install in a day, and afford on a municipal budget.
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── NAVIGATION ── -->
+<div id="nav">
+  <div id="progress-dots"></div>
+  <div id="slide-counter"></div>
+  <div class="nav-btns">
+    <button class="nav-btn" id="prevBtn" onclick="go(-1)">← Prev</button>
+    <button class="nav-btn" id="nextBtn" onclick="go(1)">Next →</button>
+  </div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.getElementById('progress-dots');
+  const counter = document.getElementById('slide-counter');
+  let cur = 0;
+
+  // build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'pdot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dots.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    setTimeout(() => slides[cur < n ? cur : cur].classList.remove('exit'), 350);
+    cur = n;
+    slides[cur].classList.add('active');
+    document.querySelectorAll('.pdot').forEach((d, i) => d.classList.toggle('active', i === cur));
+    counter.textContent = `${cur + 1} / ${slides.length}`;
+    document.getElementById('prevBtn').disabled = cur === 0;
+    document.getElementById('nextBtn').disabled = cur === slides.length - 1;
+  }
+
+  function go(dir) { if (cur + dir >= 0 && cur + dir < slides.length) goTo(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+  });
+
+  goTo(0);
+</script>
+</body>
+</html>
