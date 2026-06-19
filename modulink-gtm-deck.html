@@ -229,6 +229,37 @@
   .nav-btn:hover { background: #22253a; border-color: var(--accent); }
   .nav-btn:disabled { opacity: .3; cursor: default; }
   #slide-counter { font-size: 12px; color: var(--muted); }
+  #nav-hint { font-size: 11px; color: var(--muted); opacity: .75; }
+  #nav-hint kbd {
+    font-family: inherit; font-size: 10px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--text);
+  }
+
+  /* ── Black-out for Q&A (press B) ── */
+  body.blackout #deck, body.blackout #nav { visibility: hidden; }
+  body.blackout::after {
+    content: "Press B to resume"; position: fixed; inset: 0; background: #000;
+    color: #222; font-size: 13px; display: flex; align-items: center;
+    justify-content: center; z-index: 9999; cursor: pointer;
+  }
+
+  /* ── PRINT / PDF BACKUP ──
+     Ctrl+P → "Save as PDF" produces a clean one-slide-per-page handout
+     that works on ANY machine, even with no internet or a broken browser. */
+  @media print {
+    @page { size: landscape; margin: 0; }
+    body { height: auto; overflow: visible; background: #fff; }
+    #nav { display: none !important; }
+    #deck { overflow: visible; position: static; }
+    .slide {
+      position: relative; inset: auto; opacity: 1 !important;
+      transform: none !important; pointer-events: auto; overflow: visible;
+      page-break-after: always; break-after: page;
+      height: 100vh; width: 100vw;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .slide:last-child { page-break-after: auto; }
+  }
 </style>
 </head>
 <body>
@@ -919,6 +950,7 @@
 <div id="nav">
   <div id="progress-dots"></div>
   <div id="slide-counter"></div>
+  <div id="nav-hint"><kbd>←</kbd> <kbd>→</kbd> move · <kbd>F</kbd> fullscreen · <kbd>B</kbd> black</div>
   <div class="nav-btns">
     <button class="nav-btn" id="prevBtn" onclick="go(-1)">← Prev</button>
     <button class="nav-btn" id="nextBtn" onclick="go(1)">Next →</button>
@@ -955,10 +987,55 @@
 
   function go(dir) { goTo(cur + dir); }
 
-  /* ── Keyboard ── */
+  /* ── Keyboard (incl. presentation-remote keys) ── */
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
-    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+    // Most wireless presenters/clickers send PageDown/PageUp; many send arrows or space.
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case 'PageDown':
+      case ' ':            // spacebar
+        e.preventDefault(); go(1); break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+      case 'PageUp':
+      case 'Backspace':
+        e.preventDefault(); go(-1); break;
+      case 'Home':
+        e.preventDefault(); goTo(0); break;
+      case 'End':
+        e.preventDefault(); goTo(slides.length - 1); break;
+      case 'f':
+      case 'F':
+        toggleFullscreen(); break;
+      case 'b':
+      case 'B':
+        toggleBlackout(); break;
+      case 'Escape':
+        if (document.body.classList.contains('blackout')) toggleBlackout();
+        break;
+    }
+  });
+
+  /* ── Fullscreen toggle (F) ── */
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      (document.documentElement.requestFullscreen || function(){}).call(document.documentElement);
+    } else {
+      (document.exitFullscreen || function(){}).call(document);
+    }
+  }
+
+  /* ── Black out the screen during Q&A (B) ── */
+  function toggleBlackout() {
+    document.body.classList.toggle('blackout');
+  }
+  // Click the black screen to resume.
+  document.addEventListener('click', e => {
+    if (document.body.classList.contains('blackout')) {
+      document.body.classList.remove('blackout');
+      e.preventDefault();
+    }
   });
 
   /* ── Mouse-wheel / trackpad ──
